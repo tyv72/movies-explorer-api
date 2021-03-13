@@ -56,7 +56,7 @@ router.post('/movies', celebrate({
     }).messages({
       'any.required': 'Ссылка на изображение постера к фильму - обязательное поле',
     }),
-    movieId: Joi.required()
+    movieId: Joi.string().required()
       .messages({
         'any.required': 'Идентификатор фильма - обязательное поле',
       }),
