@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { errors } = require('celebrate');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const {
@@ -40,8 +39,6 @@ app.use(users);
 app.use(all);
 
 app.use(errorLogger);
-
-app.use(errors());
 
 app.use(errorHandler);
 
