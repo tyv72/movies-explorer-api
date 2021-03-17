@@ -15,5 +15,9 @@ module.exports = {
   },
   rules: {
     'no-underscore-dangle': 'off',
+    'no-unused-vars': ['error', { args: 'none' }],
+    'quote-props': 'off',
+    'no-console': 'off',
+    'func-names': ['error', 'never'],
   },
 };

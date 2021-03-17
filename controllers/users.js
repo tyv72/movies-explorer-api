@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const NotFoundError = require('../errors/NotFoundError');
-const ConflictError = require('../errors/ConflictError');
-const { JWT_SECRET } = require('../config/config');
+const { NotFoundError, ConflictError } = require('../errors');
+const { JWT_SECRET } = require('../config/envConfig');
+const { USER_CONFLICT_MSG, USER_NOT_FOUND_MSG } = require('../constants/errorMessages');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -13,7 +13,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new ConflictError('Пользователь с указанным email уже зарегистрирован');
+        throw new ConflictError(USER_CONFLICT_MSG);
       }
       return bcrypt.hash(password, 10);
     })
@@ -28,7 +28,7 @@ module.exports.sendUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (user == null) {
-        throw new NotFoundError(`Пользователь с идентификатором ${req.user._id} не найден`);
+        throw new NotFoundError(USER_NOT_FOUND_MSG);
       }
       res.send({ data: user });
     })
@@ -41,7 +41,7 @@ module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (user == null) {
-        throw new NotFoundError(`Пользователь с идентификатором ${req.user._id} не найден`);
+        throw new NotFoundError(USER_NOT_FOUND_MSG);
       }
       res.send({ data: user });
     })

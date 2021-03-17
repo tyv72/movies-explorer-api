@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../config/config');
-const UnauthorizedError = require('../errors/UnauthorizedError');
+const { JWT_SECRET } = require('../config/envConfig');
+const { UnauthorizedError } = require('../errors');
+const { INCORRECT_TOKEN_MSG } = require('../constants/errorMessages');
 
-// eslint-disable-next-line consistent-return
 module.exports.auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new UnauthorizedError('Некорректный токен');
+    throw new UnauthorizedError(INCORRECT_TOKEN_MSG);
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -16,7 +16,7 @@ module.exports.auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    throw new UnauthorizedError('Некорректный токен');
+    throw new UnauthorizedError(INCORRECT_TOKEN_MSG);
   }
 
   req.user = payload;
